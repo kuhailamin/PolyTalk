@@ -26,8 +26,8 @@ Ensure you have the following installed:
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/yourusername/polyadic-chatbot.git
-    cd polyadic-chatbot/backend
+    git clone https://github.com/yourusername/PolyTalk.git
+    cd PolyTalk/backend
     ```
 
 2. Install the dependencies:
