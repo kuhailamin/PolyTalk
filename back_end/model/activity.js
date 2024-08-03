@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+// Define a schema for the Activity collection
 const ActivitySchema = new mongoose.Schema(
   {
     name: {
@@ -19,4 +20,5 @@ const ActivitySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Export the Activity model based on the schema
 module.exports = mongoose.model("Activity", ActivitySchema);
