@@ -5,6 +5,7 @@ import ChatBody from "./ChatBody";
 import ChatFooter from "./ChatFooter";
 import { api } from "../api";
 
+// ChatPage component displays the chat interface, including the chat bar, chat body, and chat footer.
 const ChatPage = ({ socket, title }) => {
   const [messages, setMessages] = useState([]);
   const [typingStatus, setTypingStatus] = useState("");
@@ -14,23 +15,31 @@ const ChatPage = ({ socket, title }) => {
   const room = searchParams.get("room");
 
   const WORD_PER_SECOND = 1;
+  /**
+   * Calculate the time required to write a given number of words.
+   * @param {number} words - The number of words.
+   * @returns {number} - The total time required in seconds.
+   */
   function calculateWritingTime(words) {
     const totalTime = words * WORD_PER_SECOND;
     return totalTime;
   }
 
+  // Handles incoming messages and updates the messages state.
   useEffect(() => {
     socket.on("messageResponse", (data) => {
         setMessages([...messages, data]); 
     });
   }, [socket, messages]);
 
+  // Handles typing status and updates the typingStatus state.
   useEffect(() => {
     socket.on("typingResponse", (data) => {
       setTypingStatus(data);
     });
   }, [socket]);
 
+  // Handles the event when typing is done and clears the typingStatus state.
   useEffect(() => {
     socket.on("doneTypingResponse", () => setTypingStatus(""));
   }, [socket]);
@@ -40,6 +49,7 @@ const ChatPage = ({ socket, title }) => {
     lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Fetches the chat session duration from the server and updates the sessionTime state.
   useEffect(() => {
     async function fetchChatSession() {
       try {
