@@ -3,7 +3,6 @@ import axios from "axios";
 
 // Base URL for the API, switch between production and development URLs
 export const BASE_URL = "https://polyadic2-6ea021d6a043.herokuapp.com/";
-// --export const BASE_URL = "http://localhost:4000/";
 
 /**
  * Create an axios instance with the base URL set to the API's base URL.
