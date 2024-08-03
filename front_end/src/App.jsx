@@ -15,19 +15,7 @@ window.onbeforeunload = function () {
 };
 function App() {
   const [title, setTitle] = useState("Exam Anxiety Discussion");
-  // useEffect(() => {
-  //   const fetchTitle = async () => {
-  //     try {
-  //       const {
-  //         data: { title },
-  //       } = await api.get("/chatTitle");
-  //       setTitle(title);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   fetchTitle();
-  // }, []);
+  
   return (
     <BrowserRouter>
       <div>
