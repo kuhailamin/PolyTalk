@@ -15,6 +15,8 @@ const socketIO = require("socket.io")(http, {
 });
 app.use(cors());
 app.use(express.json());
+
+//Variables to manage users, messages, chat bot status, and session start times
 let users = {};
 let messages = {};
 let chatBotActive = {};
@@ -23,14 +25,17 @@ const { CHAT_SESSION, BOT_NAME, TIMEZONE } = require("./constants");
 
 const WORD_PER_SECOND = 0.2;
 
+//Function to calculate the writing time based on the number of words
 function calculateWritingTime(words) {
   const totalTime = words * WORD_PER_SECOND;
   return totalTime;
 }
 
+//Socket.IO connection event
 socketIO.on("connection", (socket) => {
   console.log(`⚡: ${socket.id} user just connected!`);
 
+  // Event listener for 'start' event to begin the session
   socket.on("start", (data) => {
     if (users[data?.channel].length === 3) {
       let usersName = users[data?.channel]
@@ -59,6 +64,7 @@ socketIO.on("connection", (socket) => {
     }
   });
 
+  //Event listner for 'wrapUp' event to end the session
   socket.on("wrapUp", async (data) => {
     messages[data.channel].push({
       role: "system",
@@ -82,6 +88,7 @@ socketIO.on("connection", (socket) => {
     socketIO.to(data.channel).emit("doneTypingResponse");
   });
 
+  // Event listener for 'message' event to handle user messages
   socket.on("message", async (data) => {
     if (!messages[data.channel]) {
       messages[data.channel] = [];
@@ -131,6 +138,7 @@ socketIO.on("connection", (socket) => {
     }
   });
 
+  //Event listener for 'end' event to handle session end
   socket.on("end", (data) => {
     const { channel } = data;
     socketIO.to(channel).emit("quit");
@@ -141,14 +149,17 @@ socketIO.on("connection", (socket) => {
     }
   });
 
+  // Event listner for 'typing' event to broadcast typing status
   socket.on("typing", (data) => {
     socket.broadcast.to(data?.channel).emit("typingResponse", data?.message);
   });
 
+  //Event listener for 'doneTyping' event to broadcast end of typing status
   socket.on("doneTyping", (data) =>
     socket.broadcast.to(data?.channel).emit("doneTypingResponse", data?.message)
   );
 
+  // Event listener for 'newUser' event to handle new user joining 
   socket.on("newUser", async (data) => {
     const { userName, password, channel, socketID, moderator } = data;
     console.log(data);
@@ -171,10 +182,12 @@ socketIO.on("connection", (socket) => {
     // await newActivity.save();
   });
 
+  // Event listener for 'fetchAllUsers' evets to fetch all  users in a room
   socket.on("fetchAllUsers", ({ room, id }) => {
     socketIO.to(id).emit("usersInRoom", users[room]);
   });
 
+  // Event listener for 'leave' event to handle user leaving
   socket.on("leave", async ({ channel, name, id }) => {
     users[channel] = users[channel].filter((user) => user.socketID !== id);
     socketIO.to(channel).emit("usersInRoom", users[channel]);
@@ -193,6 +206,7 @@ socketIO.on("connection", (socket) => {
     // await newActivity.save();
   });
 
+  // Event listener for 'disconnect' event to handle user disconnect
   socket.on("disconnect", (data) => {
     console.log("🔥: A user disconnected", data);
     // users = users.filter((user) => user.socketID !== socket.id);
@@ -201,25 +215,30 @@ socketIO.on("connection", (socket) => {
   });
 });
 
+// API endpoint to test the server
 app.get("/api", (req, res) => {
   res.json({ message: "Hello" });
 });
 
+//  API endpoint to get all chat messages
 app.get("/chat", async (req, res) => {
   const chats = await chat.find({});
   res.json(chats);
 });
 
+// API endpoint to get the chat title
 app.get("/chatTitle", async (req, res, next) => {
   const { title } = await appTitle.findOne();
   res.status(200).json(title);
 });
 
+// API endpoint to get GPT content
 app.get("/content", async (req, res) => {
   const result = await gptContent.find();
   res.status(200).json(result);
 });
 
+// API endpoint to update GPT content
 app.put("/content", async (req, res, next) => {
   try {
     const { content } = req.body;
@@ -234,6 +253,7 @@ app.put("/content", async (req, res, next) => {
   }
 });
 
+// API endpoint to update chat title
 app.put("/chatTitle", async (req, res, next) => {
   const { title } = req.body;
   if (!title) return res.status(422).json({ message: "Please enter title" });
@@ -245,17 +265,20 @@ app.put("/chatTitle", async (req, res, next) => {
   res.status(200).json({ message: "succes" });
 });
 
+// API endpoint to get all users in a room
 app.get("/users", (req, res) => {
   const { room } = req.query;
   res.status(200).json({ users: users[room] });
 });
 
+// API endpoint to get the chat session information
 app.get("/chatSession", (req, res, next) => {
   res.status(200).json({
     session: CHAT_SESSION,
   });
 });
 
+// API endpoint to get the remaining time for a chat session
 app.get("/timeLeft", (req, res, next) => {
   const { channel } = req.query;
   if (channel && chatSessionStart[channel]) {
@@ -266,6 +289,7 @@ app.get("/timeLeft", (req, res, next) => {
   }
 });
 
+// Starting the server 
 http.listen(process.env.PORT || 4000, async () => {
   // await mongoose.connect(
   //   "mongodb+srv://polyadic:1wh7eatRE86Yb4Bs@cluster0.p20nujc.mongodb.net/?retryWrites=true&w=majority"
