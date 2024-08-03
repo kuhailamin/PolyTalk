@@ -2,13 +2,19 @@ import { useState, useEffect } from "react";
 
 const ChatBar = ({ socket, room }) => {
   const [users, setUsers] = useState([]);
+
+  // Fetch all users in the room when the component mounts
   useEffect(() => {
     socket.emit("fetchAllUsers", { room, id: socket.id });
   }, []);
+
+  // Listen for updates to the list of users in the room
   useEffect(() => {
     socket.on("usersInRoom", (data) => {
       setUsers(data);
     });
+
+    // When a new user joins, update the state and set the user's index in localStorage    
     socket.on("newUserResponse", (data) => {
       setUsers(data);
       const index = data?.findIndex(
