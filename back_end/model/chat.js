@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+// Define a schema for the Chat collection
 const ChatSchema = new mongoose.Schema(
   {
     author: {
@@ -18,4 +19,5 @@ const ChatSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Export the Chat model based on the schema
 module.exports = mongoose.model("Chat", ChatSchema);
