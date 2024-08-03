@@ -1,11 +1,12 @@
 const mongoose = require("mongoose");
 
+// Define a schema for the AppTitle collection
 const AppTitle = new mongoose.Schema(
   {
     title: {
       type: String,
       required: true,
-      default: "Polyadic Bot",
+      default: "Polyadic Bot", // Defalut title if none is provided
     },
     key: {
       type: Number,
@@ -15,4 +16,5 @@ const AppTitle = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Export the AppTitle model based on the schema
 module.exports = mongoose.model("AppTitle", AppTitle);
