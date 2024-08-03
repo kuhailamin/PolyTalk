@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+// Home component for user sign-in and channel selection.
 const Home = ({ socket }) => {
   const navigate = useNavigate();
   const [userName, setUserName] = useState("");
@@ -10,6 +11,10 @@ const Home = ({ socket }) => {
   const [moderator, setModerator] = useState("bot");
   const [admin, setAdmin] = useState(false);
 
+  /**
+   * Handles changes in the username input field.
+   * Sets the admin flag if the username is "admin".
+   */
   const handleChange = (e) => {
     if (e.target.value.trim().toLowerCase() === "admin") {
       setAdmin(true);
@@ -17,6 +22,11 @@ const Home = ({ socket }) => {
     setUserName(e.target.value);
   };
 
+  /**
+   * Handles form submission.
+   * Stores the username in localStorage, emits a newUser event to the server,
+   * and navigates to the chat page with the selected room.
+   */
   const handleSubmit = (e) => {
     e.preventDefault();
     localStorage.setItem("userName", userName);
