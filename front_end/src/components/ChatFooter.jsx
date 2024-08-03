@@ -1,13 +1,20 @@
 import React, { useState } from "react";
 
+// ChatFooter component handles sending messages and notifying about typing status.
 const ChatFooter = ({ socket, room }) => {
   const [message, setMessage] = useState("");
+
+  // Handles the typing event by emitting a "typing" event to the server.
   const handleTyping = () =>
     socket.emit("typing", {
       message: `${localStorage.getItem("userName")} is typing`,
       channel: room,
     });
 
+   /**
+   * Handles sending the message by emitting a "message" event to the server and resetting the message input.
+   * @param {Event} e - The event object.
+   */
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (message.trim() && localStorage.getItem("userName")) {
