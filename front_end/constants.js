@@ -12,6 +12,4 @@ export const colors = [
 ];
 
 
-// users.findIndex(
-//               (user) => user.userName.toLowerCase() == message.name)
 
