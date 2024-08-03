@@ -4,6 +4,7 @@ import remarkGfm from "remark-gfm";
 import rehypeExternalLinks from "rehype-external-links";
 import { colors } from "../../constants";
 
+// Reply component to display a message reply
 function Reply({ users, name, text, original }) {
   return (
     <div
