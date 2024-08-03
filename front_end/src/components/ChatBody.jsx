@@ -11,6 +11,7 @@ import { colors } from "../../constants";
 import axios from "axios";
 import { BASE_URL } from "../api";
 
+
 const linkRenderer = (props) => {
   return (
     <a href={props.href} target="_blank" rel="noreferrer">
@@ -18,6 +19,9 @@ const linkRenderer = (props) => {
     </a>
   );
 };
+
+
+// ChatBody component handles displaying the chat messages and chat controls.
 
 const ChatBody = ({
   messages,
