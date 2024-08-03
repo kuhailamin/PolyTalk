@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+// Define a schema for the Content collection
 const ContentSchema = new mongoose.Schema(
   {
     text: {
@@ -16,4 +17,5 @@ const ContentSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Export the Content model based on the schema
 module.exports = mongoose.model("Content", ContentSchema);
