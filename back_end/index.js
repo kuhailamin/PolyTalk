@@ -53,10 +53,7 @@ socketIO.on("connection", (socket) => {
         }
       );
       chatSessionStart[data?.channel] = new Date().getTime();
-      // console.log(
-      //   new Date(),
-      //   new Date().toLocaleString("en-US", { timeZone: TIMEZONE })
-      // );
+      
       socketIO.to(data?.channel).emit("timerStarted", {
         session: CHAT_SESSION,
         date: new Date().toLocaleString("en-US", { timeZone: TIMEZONE }),
@@ -93,12 +90,7 @@ socketIO.on("connection", (socket) => {
     if (!messages[data.channel]) {
       messages[data.channel] = [];
     }
-    // const newChat = new chat({
-    //   author: data.name,
-    //   text: data.text,
-    //   channel: data.channel,
-    // });
-    // await newChat.save();
+   
     socketIO.to(data?.channel).emit("messageResponse", data);
 
     if (users[data?.channel].length >= 3 && chatBotActive[data.channel]) {
@@ -114,12 +106,7 @@ socketIO.on("connection", (socket) => {
         messages[data.channel],
         `Please act as a conversation moderator with the following users: ${usersName}. The topic of the conversation is exam anxiety. dont simulate the conversation. just wait for a response from one of the users. Address users by name using the @ sign. Don't respond at all If the user is addressing another user in the conversation. Also be short and to the point. Don't use more than 4 lines at most`
       );
-      // const gptChat = new chat({
-      //   author: "bot",
-      //   text: gptResponse,
-      //   channel: data.channel,
-      // });
-      // await gptChat.save();
+     
       const time_delay =
         calculateWritingTime(gptResponse.split(/\s+/).length) * 1000;
 
@@ -174,12 +161,7 @@ socketIO.on("connection", (socket) => {
       if (moderator === "bot") chatBotActive[channel] = true;
     }
 
-    // const newActivity = new activity({
-    //   name: userName,
-    //   channel,
-    //   text: "join",
-    // });
-    // await newActivity.save();
+    
   });
 
   // Event listener for 'fetchAllUsers' evets to fetch all  users in a room
@@ -195,11 +177,7 @@ socketIO.on("connection", (socket) => {
       chatBotActive[channel] = false;
       chatSessionStart[channel] = null;
     }
-    // const newActivity = new activity({
-    //   name,
-    //   channel,
-    //   text: "left",
-    // });
+   
     if (users[channel]) {
       delete messages[channel];
     }
@@ -209,8 +187,7 @@ socketIO.on("connection", (socket) => {
   // Event listener for 'disconnect' event to handle user disconnect
   socket.on("disconnect", (data) => {
     console.log("🔥: A user disconnected", data);
-    // users = users.filter((user) => user.socketID !== socket.id);
-    // socketIO.emit("newUserResponse", users);
+   
     socket.disconnect();
   });
 });
@@ -244,9 +221,7 @@ app.put("/content", async (req, res, next) => {
     const { content } = req.body;
     if (!content)
       return res.status(422).json({ message: "Please enter content!!!" });
-    // const value = await gptContent.findOne({ key: 1 });
-    // value.set({ text: content });
-    // await value.save();
+   
     res.status(200).json({ message: value });
   } catch (error) {
     console.log(error);
@@ -291,19 +266,7 @@ app.get("/timeLeft", (req, res, next) => {
 
 // Starting the server 
 http.listen(process.env.PORT || 4000, async () => {
-  // await mongoose.connect(
-  //   "mongodb+srv://polyadic:1wh7eatRE86Yb4Bs@cluster0.p20nujc.mongodb.net/?retryWrites=true&w=majority"
-  // );
-  // const title = await appTitle.findOne();
-  // if (!title) {
-  //   const newTitle = new appTitle();
-  //   await newTitle.save();
-  // }
-  // const content = await gptContent.findOne();
-  // if (!content) {
-  //   const newContent = new gptContent();
-  //   await newContent.save();
-  // }
+  
   console.log(`Server listening on ${process.env.PORT}`);
   console.log(Intl.DateTimeFormat().resolvedOptions().timeZone);
 });
